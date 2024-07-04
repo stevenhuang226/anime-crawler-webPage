@@ -2,13 +2,23 @@
 <head>
 	<title>anime-crawler-web-gui</title>
 	<meta charset="UTF-8">
+	<link rel='stylesheet' href='style.css'>
 </head>
 <body>
-	<p><h1>anime-crawler 網頁版本</h1></p>
-	<a href='https://github.com/stevenhuang226/anime-crawler/'>github連結</a>
-	<form id='anime_search'>
-		<input type='text' id='anime-search-input' placeholder='輸入動漫名稱' autofocus>
-		<input type='submit' value='搜尋'>
+	<script src='javascript.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/js-sha1@0.6.0/build/sha1.min.js'></script>
+	<p><h1 style='color: #ffffff;'>anime-crawler 網頁版本</h1></p>
+	<a href='https://github.com/stevenhuang226/anime-crawler-webPage' style='color: #33ffff;'>github連結</a>
+	<form id='anime_search' action='javascript:void(0);' >
+		<input type='text' id='anime-search-input' name='search' autofocus placeholder='輸入關鍵字'>
+		<input type='submit' value='搜尋' class='theButton'>
 	</form>
-	<div id='search_Result'></div>
+	<div class="videoPlayerDiv mainPlayer">
+		<button onclick="closePlayer()" id='mainPlayerCloseButton' class="mainPlayer theButton">關閉播放器</button>
+		<video class="videoPlayer mainPlayer" id='main-player' controls='controls'>
+			<source src='' type='video/mp4'>
+		</video>
+	</div>
+	<ol id='search_result' class="result-list"></ol>
+	<ol id='crawler_result' class="result-list"></ol>
 </body>
