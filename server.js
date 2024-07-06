@@ -122,9 +122,10 @@ const server = http.createServer(async (req, res) => {
 			});
 			res.end(`downloading video`);
 			new Promise((resolve, reject) => {
-				resolve(JSON.parse(data));
+				try{resolve(JSON.parse(data));}catch(error) {reject(error)};
 			}).then(async (resData) => {
 				if (! fs.existsSync(VIDEOPATH+resData.videoUID+'.mp4') && ! fs.existsSync(CACHEPATH+resData.videoUID+'.mp4')) {
+					logger.write(LOGPATH, `downloading ${resData.videoUID}`);
 					const downRes = ! await download.typeOfDownload(CACHEPATH, resData.epObj, resData.siteType, selectSite, resData.videoUID);
 					if ( downRes ) {
 						const ffmpegFun = ffmpeg()
@@ -148,7 +149,7 @@ const server = http.createServer(async (req, res) => {
 						logger.write(LOGPATH, `downloading ${resData.epObj.url} failed`);
 					}
 				}
-			}).catch('error', (error) => {
+			}).catch((error) => {
 				logger.write(LOGPATH, error);
 			});
 		});
@@ -171,7 +172,7 @@ const server = http.createServer(async (req, res) => {
 			const fileStream = fs.createReadStream(filePath, {start, end});
 			fileStream.pipe(res);
 		}
-		else if ( ! ranger && fs.existsSync(filePath) ) {
+		else if ( ! range && fs.existsSync(filePath) ) {
 			const fileSize = fs.statSync(filePath).size;
 			res.writeHead(200, {
 				'Content-Type': 'video/mp4',
@@ -213,4 +214,10 @@ cleanCache(CACHEPATH);
 server.listen(PORT, hostname, () => {
 	logger.write(LOGPATH, `running at port ${PORT}`);
 
+});
+process.on('uncaughtException', (error) => {
+	logger.write(LOGPATH, `uncaughtExceptionError: ${error}`);
+});
+process.on('unhandledRejection', (error) => {
+	logger.write(LOGPATH, `uncaughtRejection: ${error}`);
 });

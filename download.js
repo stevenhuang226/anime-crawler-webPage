@@ -65,7 +65,7 @@ async function mySelf(epObj, filePath, hashHex) {
 					reject(error);
 				});
 				reqBody.end();
-			}).catch("error", (error) => {
+			}).catch((error) => {
 				console.log(error);
 			});
 		}
@@ -111,7 +111,7 @@ async function animeOne(epObj, filePath, hashHex) {
 		reqBody.end();
 	}).then( () => {
 		return 0;
-	}).catch("error", (error) => {
+	}).catch( (error) => {
 		console.log(error);
 	});
 }

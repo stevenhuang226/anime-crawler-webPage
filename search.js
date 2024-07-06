@@ -97,26 +97,3 @@ async function search(keyword, selectSite, filter) {
 module.exports = {
 	search: search
 }
-/*
-async function main() {
-	const selectSite = [
-		{
-			path: 'myself-bbs.com',
-			regExp: /https:\/\/myself-bbs\.com\/thread-\d{4,6}-\d{1,2}-\d{1,2}\.html/g
-
-		},
-		{
-			path: "anime1.me",
-			regExp: /https:\/\/anime1\.me\/category\/[^\s"&]+/g
-		}
-	];
-	//let res = await search('狼與辛香料', selectSite, [/找不到/]);
-	//console.log(res);
-	await new Promise(async(resolve) => {
-		let ret = await search('狼與辛香料', selectSite, [/找不到/]);
-		resolve(ret);
-	}).then(ret => {
-		console.log(ret);
-	})
-}
-main();*/
