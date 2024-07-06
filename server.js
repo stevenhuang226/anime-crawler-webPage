@@ -24,11 +24,13 @@ const selectSite = [
 	}
 ];
 const filter = [
-	/找不到/,
-	/提示信息/,
+	/找不到符合條件的頁面/,
 	/tg群怎麼進不去/,
-	/查詢及建議/,
+	/建議事項/,
+	/玻放器很慢/,
 	/休閒聊天/,
+	/查詢及建議/,
+	/提示信息/,
 ]
 const http = require('node:http');
 const fs = require('node:fs');
@@ -152,16 +154,29 @@ const server = http.createServer(async (req, res) => {
 	}
 	else if ( req.method === 'GET' && /\/videos\//.test(req.url) && (! /\.\./.test(req.url)) ) {
 		const filePath = VIDEOPATH + (req.url.match(/(?<=videos\/).*/)[0]);
-		if ( fs.existsSync(filePath) ) {
-			const stat = fs.statSync(filePath);
+		const range = req.headers.range;
+		if ( range && fs.existsSync(filePath) ) {
+			const fileSize = fs.statSync(filePath).size;
+			const parts = range.replace(/bytes=/, '').split('-');
+			const start = parseInt(parts[0], 10);
+			const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
 			res.writeHead(200, {
 				'Content-Type': 'video/mp4',
-				'Content-Length': stat.size,
-				'Cache-Control': 'no-store',
-				'Accept-Ranges': 'none',
+				'Content-Length': end-start+1,
+				'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+				'Accept-Range': 'bytes',
+				'Cache-Control': 'no-cache',
 			});
-			const videoStream = fs.createReadStream(filePath);
-			videoStream.pipe(res);
+			const fileStream = fs.createReadStream(filePath, {start, end});
+			fileStream.pipe(res);
+		}
+		else if ( ! ranger && fs.existsSync(filePath) ) {
+			const fileSize = fs.statSync(filePath).size;
+			res.writeHead(200, {
+				'Content-Type': 'video/mp4',
+				'Content-Length': fileSize,
+				'Cache-Control': 'no-cache',
+			})
 		}
 		else {
 			res.writeHead(404, {
@@ -169,6 +184,14 @@ const server = http.createServer(async (req, res) => {
 			});
 			res.end('404 not found');
 		}
+	}
+	else if ( req.method === 'GET' && req.url === '/about.html' ) {
+		await fs.readFile("./about.html", (err,data) => {
+			res.writeHead(200, {
+				'Content-Type': 'text/html',
+			});
+			res.end(data);
+		});
 	}
 	else {
 		logger.write(LOGPATH, `unknow path:${req.url}`)

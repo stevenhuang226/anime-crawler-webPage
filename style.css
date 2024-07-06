@@ -75,12 +75,12 @@ body {
 }
 #crawler_result {
 	width: 700px;
-	height: 680px;
+	height: 700px;
 }
 #button-box {
 	display: flex;
 	gap: 5px;
 }
-#mainPlyaerCloseButton {
+#mainPlayerCloseButton {
 	float: right;
 }
