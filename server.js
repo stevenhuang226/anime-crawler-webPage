@@ -131,6 +131,7 @@ const server = http.createServer(async (req, res) => {
 							.input(`${CACHEPATH}${resData.videoUID}.mp4`)
 							.output(`${VIDEOPATH}${resData.videoUID}.mp4`)
 							.videoCodec('copy').audioCodec('copy')
+							.outputOptions('-movflags faststart')
 							.on('end', () => {
 								fs.unlink(`${CACHEPATH}${resData.videoUID}.mp4`, (error) => {
 									if (error) {

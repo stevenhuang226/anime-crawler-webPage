@@ -115,7 +115,6 @@ function addCrawlerResult(List, result, playAble=false, videoUID, siteType, theU
 				method: 'POST',
 				body: JSON.stringify({'epObj': result,'siteType': siteType,'videoUID': videoUID}),
 			});
-			console.log('disable button');
 			cacheButton.disabled = true;
 			cacheButton.classList.add('disabled')
 		});
@@ -126,6 +125,8 @@ function addCrawlerResult(List, result, playAble=false, videoUID, siteType, theU
 	List.appendChild(listItem);
 }
 function closePlayer() {
+	const docPlayer = document.getElementById('main-player');
+	docPlayer.pause();
 	const mainPlayer = document.getElementsByClassName('mainPlayer');
 	for ( let element of mainPlayer ) {
 		element.style.display = 'none';
