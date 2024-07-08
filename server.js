@@ -217,7 +217,9 @@ function RTvideo(req, res) {
 			'Content-Type': 'video/mp4',
 			'Content-Length': fileSize,
 			'Cache-Control': 'no-cache',
-		})
+		});
+		const fileStream = fs.createReadStream(filePath);
+		fileStream.pipe(res);
 	}
 	else {
 		logger.write(LOGPATH, ` unknow video path: ${req.url}`);
