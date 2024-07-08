@@ -201,7 +201,7 @@ function RTvideo(req, res) {
 		const parts = range.replace(/bytes=/, '').split('-');
 		const start = parseInt(parts[0], 10);
 		const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-		res.writeHead(200, {
+		res.writeHead(206, {
 			'Content-Type': 'video/mp4',
 			'Content-Length': end-start+1,
 			'Content-Range': `bytes ${start}-${end}/${fileSize}`,
