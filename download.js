@@ -13,6 +13,9 @@ async function mySelf(epObj, filePath, hashHex) {
 	const urlHostname = url.parse(epObj.url).hostname;
 	const urlPathHeader = epObj.url.match(/(?<=com)\/.+\//g)[0];
 	const fileName = filePath+hashHex+'.mp4';
+	if (/\.\./.test(fileName)) {
+		return -1;
+	}
 	return new Promise( (resolve,reject) => {
 		const reqObj = {
 			hostname: url.parse(epObj.url).hostname,
@@ -72,14 +75,17 @@ async function mySelf(epObj, filePath, hashHex) {
 		streamFile.end();
 		return 0;
 	}).catch( (error) => {
-		console.log(error);
-	} )
+		return -1;
+	})
 }
 async function animeOne(epObj, filePath, hashHex) {
 	const https = require("https");
 	const fs = require("fs");
 	const url = require("url");
 	const fileName = filePath+hashHex+'.mp4';
+	if (/\.\./.test(fileName)) {
+		return -1;
+	}
 	await new Promise( (resolve,reject) => {
 		const reqObj = {
 			hostname: url.parse(epObj.url).hostname,
@@ -112,7 +118,7 @@ async function animeOne(epObj, filePath, hashHex) {
 	}).then( () => {
 		return 0;
 	}).catch( (error) => {
-		console.log(error);
+		return -1;
 	});
 }
 module.exports = {
